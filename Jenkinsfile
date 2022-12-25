@@ -15,10 +15,13 @@ pipeline {
     }
   stage('Scan Images') { 
             steps {
-          
-            sh ''' curl -k -u c0a0e49b-d9ac-4e92-99f2-e42f044ec7c5:0c8VXZBBM57RawBl6DdNooQrHN8= --output ./twistcli https://us-east1.cloud.twistlock.com/us-1-111573360/api/v1/util/twistcli
+          withCredentials([string(credentialsId: 'PCC_CONSOLE_URL', variable: 'URL'), string(credentialsId: 'PCC_PASS', variable: 'PASS'), string(credentialsId: 'PCC_USER', variable: 'USER')]) {
+   
+      sh ''' curl -k -u "$USER":"$PASS" --output ./twistcli $URL/api/v1/util/twistcli
             chmod a+x ./twistcli
-             ./twistcli images scan --address https://us-east1.cloud.twistlock.com/us-1-111573360 --user c0a0e49b-d9ac-4e92-99f2-e42f044ec7c5  --password 0c8VXZBBM57RawBl6DdNooQrHN8= --details webapp1 ''' } 
+            ./twistcli images scan --dockerAddress unix:///var/run/docker.sock --address "$URL" --user "$USER"  --password "$PASS" --details webapp1 ''' 
+      
+     } } 
            }  
 
 	/* stage('Push') {
