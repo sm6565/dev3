@@ -4,20 +4,6 @@ pipeline {
         maven 'Maven_3_6_3'  
     }
    stages{
-    stage('CompileandRunSAST') {
-            steps {	
-		sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=smdemo -Dsonar.organization=setth -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=f6fc24f42103facc3402fdd5a39b0ccec8ea0444'
-			}
-    }
-
-	stage('RunSCA') {
-            steps {		
-				withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
-					sh 'mvn snyk:test -fn'
-				}
-			}
-    }
-
 	stage('Build') { 
             steps { 
                withDockerRegistry([credentialsId: "dockerlogin", url: ""]) {
@@ -27,6 +13,13 @@ pipeline {
                }
             }
     }
+  stage('Scan Images') { 
+            steps {
+          
+            sh ''' curl -k -u c0a0e49b-d9ac-4e92-99f2-e42f044ec7c5:0c8VXZBBM57RawBl6DdNooQrHN8= --output ./twistcli https://us-east1.cloud.twistlock.com/us-1-111573360/api/v1/util/twistcli
+            chmod a+x ./twistcli
+             ./twistcli --address https://us-east1.cloud.twistlock.com --user c0a0e49b-d9ac-4e92-99f2-e42f044ec7c5  --password 0c8VXZBBM57RawBl6DdNooQrHN8= --details webapp1 ''' } 
+           }  
 
 	stage('Push') {
             steps {
