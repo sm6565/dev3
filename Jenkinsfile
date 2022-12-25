@@ -13,13 +13,13 @@ pipeline {
                }
             }
     }
-  stage('Scan Images') { 
+  stage('Scan Image') { 
             steps {
-          withCredentials([string(credentialsId: 'PCC_CONSOLE_URL', variable: 'URL'), string(credentialsId: 'PCC_PASS', variable: 'PASS'), string(credentialsId: 'PCC_USER', variable: 'USER')]) {
+          withCredentials([string(credentialsId: 'PCC_CONSOLE_URL', variable: 'CONSOLE'), string(credentialsId: 'PCC_PASS', variable: 'PASS'), string(credentialsId: 'PCC_USER', variable: 'USER')]) {
    
-      sh ''' curl -k -u "$USER":"$PASS" --output ./twistcli $URL/api/v1/util/twistcli
+      sh ''' curl -k -u "$USER":"$PASS" --output ./twistcli $CONSOLE/api/v1/util/twistcli
             chmod a+x ./twistcli
-            ./twistcli images scan --dockerAddress unix:///var/run/docker.sock --address "$URL" --user "$USER"  --password "$PASS" --details webapp1 ''' 
+            ./twistcli images scan --dockerAddress unix:///var/run/docker.sock --address "$CONSOLE" --user "$USER"  --password "$PASS" --details webapp1 ''' 
       
      } } 
            }  
