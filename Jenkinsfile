@@ -13,17 +13,17 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'PCC_CONSOLE_URL', variable: 'CONSOLE'), string(credentialsId: 'PCC_PASS', variable: 'PASS'), string(credentialsId: 'PCC_USER', variable: 'USER')])
                  {
-                    steps {
+                    
                         script { 
                           docker.image('bridgecrew/checkov:latest').inside("--entrypoint=''") {
                           unstash 'source'
                         
                               sh 'export PRISMA_API_URL=https://api.prismacloud.io'
-                              sh 'checkov -d . --use-enforcement-rules -o cli --bc-api-key "$USER"::"$PASS" --prisma-api-url $PRISMA_API_URL '
+                              sh 'checkov -d . --use-enforcement-rules -o cli --bc-api-key $"USER"::$"PASS" --prisma-api-url $PRISMA_API_URL '
                           
                           }
                         }
-                    }
+                    
                 }
             }    
         }
