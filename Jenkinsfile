@@ -19,7 +19,7 @@ pipeline {
                          
                         
                               sh 'export PRISMA_API_URL=https://api.prismacloud.io'
-                              sh 'checkov -d . --use-enforcement-rules -o cli --bc-api-key $"USER"::$"PASS" --prisma-api-url "$PRISMA_API_URL" '
+                              sh 'checkov -d . --use-enforcement-rules -o cli --bc-api-key c0a0e49b-d9ac-4e92-99f2-e42f044ec7c5::0c8VXZBBM57RawBl6DdNooQrHN8= --prisma-api-url https://api.prismacloud.io '
                           
                           }
                         }
