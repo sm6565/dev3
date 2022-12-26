@@ -19,7 +19,7 @@ pipeline {
                           unstash 'source'
                         
                               sh 'export PRISMA_API_URL=https://api.prismacloud.io'
-                              sh 'checkov -d . --use-enforcement-rules -o cli --bc-api-key ${USER}::${PASS} --prisma-api-url $PRISMA_API_URL '
+                              sh 'checkov -d . --use-enforcement-rules -o cli --bc-api-key "$USER"::"$PASS" --prisma-api-url $PRISMA_API_URL '
                           
                           }
                         }
