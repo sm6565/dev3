@@ -19,7 +19,7 @@ pipeline {
                           docker.image('bridgecrew/checkov:latest').inside("--entrypoint=''") {
                           //unstash 'source'
                         
-                              sh 'export PRISMA_API_URL=https://api.prismacloud.io'
+                              sh 'export PRISMA_API_URL="https://api.prismacloud.io"'
 			      sh 'echo $PRISMA_API_URL'
 			      sh 'echo $USER'
 			      sh 'echo "$USER" '
