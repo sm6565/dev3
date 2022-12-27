@@ -20,7 +20,7 @@ pipeline {
                           //unstash 'source'
                         
                               sh 'export PRISMA_API_URL=https://api.prismacloud.io'
-			      sh 'echo "$PRISMA_API_URL"'
+			      sh 'echo $PRISMA_API_URL'
 			      sh 'echo $USER'
 			      sh 'echo "$USER" '
 			      sh 'echo "$PCC_USER" '
