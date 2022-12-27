@@ -20,7 +20,13 @@ pipeline {
                           //unstash 'source'
                         
                               sh 'export PRISMA_API_URL=https://api.prismacloud.io'
-                              sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key $PCC_USER::$PCC_PASS --prisma-api-url https://api.prismacloud.io '
+			      sh 'echo $PRISMA_API_URL'
+			      sh 'echo $USER'
+			      sh 'echo "$USER" '
+			      sh 'echo "$PCC_USER" '
+			      sh 'echo $PCC_USER '	  
+                              
+			      //sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key $PCC_USER::$PCC_PASS --prisma-api-url https://api.prismacloud.io '
                           
                           }
                         }
