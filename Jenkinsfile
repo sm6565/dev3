@@ -22,7 +22,7 @@ pipeline {
                         
                               sh 'export PRISMA_API_URL="https://api.prismacloud.io"'
 				  
-			      sh 'env'
+			      sh 'cat "$PASS"'
                               
 				  //sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key ${user}::${pass} --prisma-api-url "$PRISMA_API_URL" '
                           
