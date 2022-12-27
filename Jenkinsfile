@@ -12,7 +12,7 @@ pipeline {
            
        stage('SCA by Prisma Cloud') {
             steps {
-                withCredentials([string(credentialsId: 'PCC_CONSOLE_URL', variable: 'CONSOLE'), string(credentialsId: 'PCC_PASS', variable: 'PASS'), string(credentialsId: 'PCC_USER', variable: 'USER')])
+                withCredentials([string(credentialsId: 'PCC_PASS', variable: 'pass'), string(credentialsId: 'PCC_USER', variable: 'user')])
                  {
                     
                         script { 
@@ -22,7 +22,7 @@ pipeline {
                               sh 'export PRISMA_API_URL="https://api.prismacloud.io"'
 
                               
-			      sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key'$USER'::'$PASS' --prisma-api-url "$PRISMA_API_URL" '
+				  sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key ${user}::${pass} --prisma-api-url "$PRISMA_API_URL" '
                           
                           }
                         }
