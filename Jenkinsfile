@@ -4,33 +4,49 @@ pipeline {
         maven 'Maven_3_6_3'  
     }
    stages{
-    /* stage('CompileandRunSAST') {
-            steps {	
-		sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=smdemo -Dsonar.organization=setth -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=f6fc24f42103facc3402fdd5a39b0ccec8ea0444'
-			}
-        }  */
-           
-       stage('SCA by Prisma Cloud') {
+  stage('SCA by Prisma') {
             steps {
-                withCredentials([string(credentialsId: 'PCC_PASS', variable: 'PASS'), string(credentialsId: 'PCC_USER', variable: 'USER')])
-                 {
-              
-                        script { 
-                          docker.image('bridgecrew/checkov:latest').inside("--entrypoint=''") {
-                          //unstash 'source'
-				  
+            withCredentials([string(credentialsId: 'PCC_USER', variable: 'USER'), string(credentialsId: 'PCC_PASS', variable: 'PASS')]) 
+            {
+                script {
+                 docker.image('bridgecrew/checkov:latest').inside("--entrypoint=''") {
                         
-                              sh 'export PRISMA_API_URL="https://api.prismacloud.io"'
-				  
-			      sh 'cat $PASS'
-                              
-				  //sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key ${user}::${pass} --prisma-api-url "$PRISMA_API_URL" '
+                            sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key "$USER"::"$PASS" --prisma-api-url https://api.prismacloud.io '
                           
                           }
-                        }
-                    
-                }
+                }          
             }    
-        }
-   }
-}  
+            }  
+    }
+	stage('Build') { 
+            steps { 
+               withDockerRegistry([credentialsId: "dockerlogin", url: ""]) {
+                 script{
+                 app =  docker.build("webapp1")
+                 }
+               }
+            }
+    }
+  stage('Scan Image') { 
+            steps {
+          withCredentials([string(credentialsId: 'PCC_CONSOLE_URL', variable: 'CONSOLE'), string(credentialsId: 'PCC_PASS', variable: 'PASS'), string(credentialsId: 'PCC_USER', variable: 'USER')]) {
+   
+      sh ''' curl -k -u "$USER":"$PASS" --output ./twistcli $CONSOLE/api/v1/util/twistcli
+            chmod a+x ./twistcli
+            ./twistcli images scan --dockerAddress unix:///var/run/docker.sock --address "$CONSOLE" --user "$USER"  --password "$PASS" --details webapp1 ''' 
+      
+     } } 
+           }  
+
+	/* stage('Push') {
+            steps {
+                script{
+                    docker.withRegistry('https://572392880480.dkr.ecr.us-east-1.amazonaws.com/webapp1', 'ecr:us-east-1:aws-credentials') {
+                    app.push("latest")
+                    }
+                }
+            }
+    	} */
+	    
+  }
+}
