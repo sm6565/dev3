@@ -22,7 +22,7 @@ pipeline {
             steps { 
                withDockerRegistry([credentialsId: "dockerlogin", url: ""]) {
                  script{
-                 app =  docker.build("webapp1")
+                 app =  docker.build("webserver")
                  }
                }
             }
@@ -33,20 +33,20 @@ pipeline {
    
       sh ''' curl -k -u "$USER":"$PASS" --output ./twistcli $CONSOLE/api/v1/util/twistcli
             chmod a+x ./twistcli
-            ./twistcli images scan --dockerAddress unix:///var/run/docker.sock --address "$CONSOLE" --user "$USER"  --password "$PASS" --details webapp1 ''' 
+            ./twistcli images scan --dockerAddress unix:///var/run/docker.sock --address "$CONSOLE" --user "$USER"  --password "$PASS" --details webserver ''' 
       
      } } 
            }  
 
-	/* stage('Push') {
+    stage('Push') {
             steps {
                 script{
-                    docker.withRegistry('https://572392880480.dkr.ecr.us-east-1.amazonaws.com/webapp1', 'ecr:us-east-1:aws-credentials') {
+                    docker.withRegistry('https://sett1.jfrog.io/app1', 'dockerloginjfrog') {
                     app.push("latest")
                     }
                 }
             }
-    	} */
+    	} 
 	    
   }
 }
