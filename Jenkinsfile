@@ -41,7 +41,7 @@ pipeline {
     stage('Push') {
             steps {
                 script{
-                    docker.withRegistry('https://sett1.jfrog.io/app1', 'dockerloginjfrog') {
+                    docker.withRegistry('https://sett1.jfrog.io', 'dockerloginjfrog') {
                     app.push("latest")
                     }
                 }
