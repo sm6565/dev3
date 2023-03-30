@@ -11,7 +11,7 @@ pipeline {
                 script {
                  docker.image('bridgecrew/checkov:latest').inside("--entrypoint=''") {
                         
-                            sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key "$USER"::"$PASS" --prisma-api-url https://api.prismacloud.io '
+                            sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key "$USER"::"$PASS" --prisma-api-url https://api.jp.prismacloud.io '
                           
                           }
                 }          
