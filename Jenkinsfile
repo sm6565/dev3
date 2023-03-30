@@ -4,14 +4,20 @@ pipeline {
         maven 'Maven_3_6_3'  
     }
    stages{
-  stage('SCA by Prisma') {
+    
+    stage('Run SAST') {
+        steps {	
+    sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=smdemo -Dsonar.organization=setth -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=f6fc24f42103facc3402fdd5a39b0ccec8ea0444'
+        }
+}  
+    stage('SCA by Prisma') {
             steps {
             withCredentials([string(credentialsId: 'PCC_USER', variable: 'USER'), string(credentialsId: 'PCC_PASS', variable: 'PASS')]) 
             {
                 script {
                  docker.image('bridgecrew/checkov:latest').inside("--entrypoint=''") {
                         
-                            sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key "$USER"::"$PASS" --prisma-api-url https://api.jp.prismacloud.io '
+                            sh 'checkov --quiet --soft-fail -d . --use-enforcement-rules -o cli --bc-api-key "$USER"::"$PASS" --prisma-api-url https://api.prismacloud.io '
                           
                           }
                 }          
@@ -27,7 +33,7 @@ pipeline {
                }
             }
     }
-  stage('Scan Image') { 
+    stage('Scan Image') { 
             steps {
           withCredentials([string(credentialsId: 'PCC_CONSOLE_URL', variable: 'CONSOLE'), string(credentialsId: 'PCC_PASS', variable: 'PASS'), string(credentialsId: 'PCC_USER', variable: 'USER')]) {
    
@@ -37,7 +43,7 @@ pipeline {
      } } 
            } 
 
-  stage('Push to Jfrog') {
+    stage('Push to Jfrog') {
             steps {
               withCredentials([string(credentialsId: 'J_USER', variable: 'JUSER'), string(credentialsId: 'J_PASS', variable: 'JPASS')]) 
          {
